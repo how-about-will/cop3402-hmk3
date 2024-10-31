@@ -103,6 +103,7 @@ extern void yyerror(const char *filename, const char *msg);
 
 %start program
 
+
 %code {
  /* extern declarations provided by the lexer */
 extern int yylex(void);
@@ -118,9 +119,111 @@ extern void setProgAST(block_t t);
 %%
  /* Write your grammar rules below and before the next %% */
 
+program : block "."
 
+block : "begin" constDecls varDecls stmts "end"
 
+constDecls : empty
+           | constDecl
+           | constDecls constDecl
+           ;
 
+const_decl : "const" constDefList ";"
+
+const_def_list : constDef
+               | constDefList "," constDef
+               ;
+
+constDef : ident "=" number
+
+varDecls : empty
+         | varDecl
+         | varDecls varDecl
+         ;
+
+varDecl : "var" identList ";"
+
+identList : ident
+          | identList "," ident
+          ;
+
+procDecls : empty
+          | procDecl
+          | procDecls procDecl
+          ;
+
+procDecl : "proc" ident block ";"
+
+stmts : empty
+      | stmtList
+      ;
+
+empty : 
+
+stmtList : stmt
+         | stmtList ";" stmt
+         ;
+
+stmt : assignStmt
+     | callStmt
+     | ifStmt
+     | whileStmt
+     | readStmt
+     | printStmt
+     | blockStmt
+     ;
+
+assignStmt : ident ":=" expr
+
+callStmt : "call" ident
+    
+ifStmt : "if" condition "then" stmts "else" stmts "end"
+       | "if" condition "then" stmts "end"
+       ;
+
+whileStmt : "while" condition "do" stmts "end"
+
+readStmt : "read" ident
+
+printStmt : "print" expr
+
+blockStmt : block
+
+condition : dbCondition
+          | relOpCondition
+          ;
+
+dbCondition : "divisible" expr "by" expr
+
+relOpCondition : expr relOp expr
+
+relOp : "=="
+      | "!="
+      | "<"
+      | "<="
+      | ">"
+      | ">="
+      ;
+
+expr : term
+     | expr "+" term
+     | expr "-" term
+     ;
+
+term : factor
+     | term "*" factor
+     | term "/" factor
+     ;
+
+factor : ident
+       | number
+       | sign factor
+       | "(" expr ")"
+       ;
+
+sign : "-"
+     | "+"
+     ;
 
 %%
 
