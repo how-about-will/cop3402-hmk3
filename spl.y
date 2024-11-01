@@ -100,6 +100,7 @@ extern void yyerror(const char *filename, const char *msg);
 %type <expr> expr
 %type <expr> term
 %type <expr> factor
+%type <token> sign
 
 %start program
 
