@@ -128,28 +128,28 @@ constDecls : empty {$$ = ast_const_decls_empty($1);}
            | constDecls constDecl {$$ = ast_const_decls($1, $2);}
            ;
 
-const_decl : "const" constDefList ";" {$$ = ast_const_decl($2);}
+constDecl : "const" constDefList ";" {$$ = ast_const_decl($2);}
 
-const_def_list : constDef {$$ = ast_const_def_list_singleton($1);}
+constDefList : constDef {$$ = ast_const_def_list_singleton($1);}
                | constDefList "," constDef {$$ = ast_const_def_list($1, $3);}
                ;
 
-constDef : ident "=" number {$$ = ast_const_def($1, $3);}
+constDef : identsym "=" numbersym {$$ = ast_const_def($1, $3);}
 
 varDecls : empty {$$ = ast_var_decls_empty($1);}
          | varDecls varDecl {$$ = ast_var_decls($1, $2);}
          ;
 
-varDecl : "var" identList ";" {$$ = ast_var_decl($1);}
+varDecl : "var" identList ";" {$$ = ast_var_decl($2);}
 
-identList : ident {$$ = ast_ident_list_singleton($1);}
-          | identList "," ident {$$ = ast_ident_list($1, $3);}
+identList : identsym {$$ = ast_ident_list_singleton($1);}
+          | identList "," identsym {$$ = ast_ident_list($1, $3);}
           ;
 
 procDecls : empty {$$ = ast_proc_decls_empty($1);}
-          | procDecls procDecl {$$ = ast_proc_decls($1,2);}           ;
+          | procDecls procDecl {$$ = ast_proc_decls($1,$2);}           ;
 
-procDecl : "proc" ident block ";" {$$ = ast_proc_decl($2, $3);}
+procDecl : "proc" identsym block ";" {$$ = ast_proc_decl($2, $3);}
 
 stmts : empty {$$ = ast_stmts_empty($1);}
       | stmtList {$$ = ast_stmts($1);}
@@ -158,7 +158,7 @@ stmts : empty {$$ = ast_stmts_empty($1);}
 empty : {$$ = ast_empty(file_location_make(lexer_filename(), lexer_line()));}
 
 stmtList : stmt {$$ = ast_stmt_list_singleton($1);}
-         | stmtList ";" stmt {$$ = ast_stmt_list_singleton($1, $3);}
+         | stmtList ";" stmt {$$ = ast_stmt_list($1, $3);}
          ;
 
 stmt : assignStmt {$$ = ast_stmt_assign($1);}
@@ -170,17 +170,17 @@ stmt : assignStmt {$$ = ast_stmt_assign($1);}
      | blockStmt {$$ = ast_stmt_block($1);}
      ;
 
-assignStmt : ident ":=" expr {$$ = ast_assign_stmt($1, $3);}
+assignStmt : identsym ":=" expr {$$ = ast_assign_stmt($1, $3);}
 
-callStmt : "call" ident {$$ = ast_call_stmt($2);}
+callStmt : "call" identsym {$$ = ast_call_stmt($2);}
     
-ifStmt : "if" condition "then" stmts "else" stmts "end" {$$ = ast_if_then_else_stmt($1,$3,$5);}
+ifStmt : "if" condition "then" stmts "else" stmts "end" {$$ = ast_if_then_else_stmt($2,$4,$6);}
        | "if" condition "then" stmts "end" {$$ = ast_if_then_stmt($2, $4);}
        ;
 
 whileStmt : "while" condition "do" stmts "end" {$$ = ast_while_stmt($2,$4);}
 
-readStmt : "read" ident {$$ = ast_read_stmt($2);}
+readStmt : "read" identsym {$$ = ast_read_stmt($2);}
 
 printStmt : "print" expr {$$ = ast_print_stmt($2);}
 
@@ -212,8 +212,8 @@ term : factor
      | term "/" factor
      ;
 
-factor : ident 
-       | number 
+factor : identsym 
+       | numbersym 
        | sign factor 
        | "(" expr ")" 
        ;
