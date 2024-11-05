@@ -190,7 +190,7 @@ condition : dbCondition {$$ = ast_condition_db($1);}
           | relOpCondition {$$ = ast_condition_rel_op($1);}
           ;
 
-dbCondition : "divisible" expr "by" expr {ast_db_condition($2,$4);}
+dbCondition : "divisible" expr "by" expr {$$ = ast_db_condition($2,$4);}
 
 relOpCondition : expr relOp expr {$$ = ast_rel_op_condition($1, $2, $3);}
 
