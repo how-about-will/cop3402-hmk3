@@ -62,7 +62,7 @@ extern void yyerror(const char *filename, const char *msg);
 %token <token> leqsym     "<="
 %token <token> gtsym      ">"
 %token <token> geqsym     ">="
-
+ 
 %type <block> program
 
 %type <block> block
@@ -120,7 +120,7 @@ extern void setProgAST(block_t t);
 %%
  /* Write your grammar rules below and before the next %% */
 
-program : block "."
+program : block "." {$$ = $1;}
 
 block : "begin" constDecls varDecls procDecls stmts "end" {$$ = ast_block($1, $2, $3, $4, $5);}
 
@@ -155,7 +155,7 @@ stmts : empty {$$ = ast_stmts_empty($1);}
       | stmtList {$$ = ast_stmts($1);}
       ;
 
-empty : {$$ = ast_empty(file_location_make(lexer_filename(), lexer_line()));}
+empty : %empty {$$ = ast_empty(file_location_make(lexer_filename(), lexer_line()));}
 
 stmtList : stmt {$$ = ast_stmt_list_singleton($1);}
          | stmtList ";" stmt {$$ = ast_stmt_list($1, $3);}
@@ -186,13 +186,13 @@ printStmt : "print" expr {$$ = ast_print_stmt($2);}
 
 blockStmt : block {$$ = ast_block_stmt($1);}
 
-condition : dbCondition
-          | relOpCondition
+condition : dbCondition {$$ = ast_condition_db($1);}
+          | relOpCondition {$$ = ast_condition_rel_op($1);}
           ;
 
-dbCondition : "divisible" expr "by" expr
+dbCondition : "divisible" expr "by" expr {ast_db_condition($2,$4);}
 
-relOpCondition : expr relOp expr
+relOpCondition : expr relOp expr {$$ = ast_rel_op_condition($1, $2, $3);}
 
 relOp : "=="
       | "!="
@@ -203,19 +203,19 @@ relOp : "=="
       ;
 
 expr : term
-     | expr "+" term
-     | expr "-" term
+     | expr "+" term {$$ = ast_expr_binary_op(ast_binary_op_expr($1, $2, $3));}
+     | expr "-" term {$$ = ast_expr_binary_op(ast_binary_op_expr($1, $2, $3));}
      ;
 
 term : factor
-     | term "*" factor
-     | term "/" factor
+     | term "*" factor {$$ = ast_expr_binary_op(ast_binary_op_expr($1, $2, $3));}
+     | term "/" factor {$$ = ast_expr_binary_op(ast_binary_op_expr($1, $2, $3));}
      ;
 
-factor : identsym 
-       | numbersym 
-       | sign factor 
-       | "(" expr ")" 
+factor : identsym {ast_expr_ident($1);}
+       | numbersym {ast_expr_number($1);}
+       | sign factor {ast_expr_signed_expr($1, $2);}
+       | "(" expr ")" {$$ = $2;}
        ;
 
 sign : "-" 
