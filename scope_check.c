@@ -10,13 +10,13 @@
 
 
 
-scope_check_program(program_t prog){
+block_t scope_check_program(block_t prog){
     symtab_enter_scope();
 
-    scope_check_const_decls();
-    scope_check_var_decls();
-    scope_check_proc_decls();
-    scope_check_stmts();
+    scope_check_const_decls(prog.const_decls);
+    scope_check_var_decls(prog.var_decls);
+    scope_check_proc_decls(prog.proc_decls);
+    scope_check_stmts(prog.stmts);
 
     symtab_leave_scope();
     return prog;
