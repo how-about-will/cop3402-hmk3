@@ -58,7 +58,7 @@ bool scope_declared(scope_t *s, const char *name)
 
 //returns a pointer to the attributes if the name exists in the scope otherwise returns null
 id_attrs *scope_lookup(scope_t *s, const char *name){
-    for(int i = 0; i < s->size){
+    for(int i = 0; i < s->size; i++){
         if(strcmp(name,s->entries[i]->id)){
             return s->entries[i]->attrs;
         }
