@@ -21,3 +21,12 @@ block_t scope_check_program(block_t prog){
     symtab_leave_scope();
     return prog;
 }
+
+//scope checks const_decls
+void scope_check_const_decls(const_decls_t decls){
+    const_decl_t* constDecl = decls.start;
+    while(constDecl != NULL){
+        scope_check_const_delc(*constDecl->next);
+        constDecl = constDecl->next;
+    }
+}
