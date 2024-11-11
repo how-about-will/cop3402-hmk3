@@ -16,8 +16,9 @@ typedef struct {
 
 // Invariant: 0 <= size < MAX_SCOPE_SIZE;
 typedef struct scope_s {
+    //number of associations in the entries array
     unsigned int size;
-    // num. of associations in this scope
+    //gives a unique number for entry within a scope.
     unsigned int loc_count;
     scope_assoc_t *entries[MAX_SCOPE_SIZE];
 } scope_t;
