@@ -30,3 +30,18 @@ void scope_check_const_decls(const_decls_t decls){
         constDecl = constDecl->next;
     }
 }
+
+void scope_check_var_decls(var_decls_t decls)
+{
+    
+}
+
+void scope_check_proc_decls(proc_decls_t decls)
+{
+
+}
+
+void scope_check_stmts(stmts_t stmts)
+{
+
+}
