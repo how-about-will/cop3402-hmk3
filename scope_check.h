@@ -3,6 +3,7 @@
 #include "ast.h"
 #include "id_use.h"
 
+extern block_t scope_check_program(block_t prog);
 
 extern void scope_check_const_decls(const_decls_t decls);
 

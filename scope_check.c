@@ -25,7 +25,6 @@ block_t scope_check_program(block_t prog){
 //scope checks const_decls
 void scope_check_const_decls(const_decls_t decls){
     const_decl_t* constDecl = decls.start;
-    unsigned int offset_count = 0;
     while(constDecl != NULL){
         //chech each def in def_list
         const_def_t* constDef = constDecl->const_def_list.start;
@@ -33,7 +32,7 @@ void scope_check_const_decls(const_decls_t decls){
         while(constDef != NULL){
             const char* name = constDef->ident.name;
 
-            id_attrs *attrs = create_id_attrs(*constDef->ident.file_loc, constant_idk, offset_count);
+            id_attrs *attrs = create_id_attrs(*constDef->ident.file_loc, constant_idk, symtab_scope_loc_count());
 
             //check for already declared error
             if(!symtab_declared_in_current_scope(name) && attrs != NULL){
@@ -44,7 +43,6 @@ void scope_check_const_decls(const_decls_t decls){
             }
             //scope_check_const_delc(*constDecl->next); I don't think we need this
             constDef = constDef->next;
-            offset_count++;
         }
         constDecl = constDecl->next;
     }
@@ -54,14 +52,14 @@ void scope_check_var_decls(var_decls_t decls)
 {
     //implement kind of same as constant check
     var_decl_t* varDecl = decls.var_decls;
-    unsigned int offset_count = 0;
+
     while(varDecl != NULL){
         ident_t *identLi = varDecl->ident_list.start;
 
         while(identLi != NULL){
             const char* name = identLi->name;
 
-            id_attrs *attrs = create_id_attrs(*identLi->file_loc, variable_idk, offset_count);
+            id_attrs *attrs = create_id_attrs(*identLi->file_loc, variable_idk, symtab_scope_loc_count());
 
              //check for already declared error
             if(!symtab_declared_in_current_scope(name) && attrs != NULL){
@@ -72,7 +70,7 @@ void scope_check_var_decls(var_decls_t decls)
             }
 
             identLi=identLi->next;
-            offset_count++;
+
         }
         varDecl = varDecl->next;
     }
