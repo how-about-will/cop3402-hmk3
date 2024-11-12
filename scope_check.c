@@ -52,6 +52,30 @@ void scope_check_const_decls(const_decls_t decls){
 
 void scope_check_var_decls(var_decls_t decls)
 {
+    //implement kind of same as constant check
+    var_decl_t* varDecl = decls.var_decls;
+    unsigned int offset_count = 0;
+    while(varDecl != NULL){
+        ident_t *identLi = varDecl->ident_list.start;
+
+        while(identLi != NULL){
+            const char* name = identLi->name;
+
+            id_attrs *attrs = create_id_attrs(*identLi->file_loc, variable_idk, offset_count);
+
+             //check for already declared error
+            if(!symtab_declared_in_current_scope(name) && attrs != NULL){
+                symtab_insert(name, attrs);
+            }
+            else{
+                bail_with_error("Variable '%s' is already declared in this scope", name);
+            }
+
+            identLi=identLi->next;
+            offset_count++;
+        }
+        varDecl = varDecl->next;
+    }
     
 }
 
