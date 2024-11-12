@@ -39,7 +39,15 @@ void scope_check_const_decls(const_decls_t decls){
                 symtab_insert(name, attrs);
             }
             else{
-                bail_with_error("Constant '%s' is already declared in this scope", name);
+                int kind = symtab_lookup(name)->attrs->kind;//gets the type of what the name was declared as originally
+
+                //checks if the previously declared name was a constant or a variable
+                if(kind == 0){ //constant
+                    bail_with_prog_error(*constDef->file_loc, "constant \"%s\" is already declared as a constant", name);
+                }
+                else{ //variable 
+                    bail_with_prog_error(*constDef->file_loc, "constant \"%s\" is already declared as a variable", name);
+                }
             }
             //scope_check_const_delc(*constDecl->next); I don't think we need this
             constDef = constDef->next;
@@ -66,7 +74,15 @@ void scope_check_var_decls(var_decls_t decls)
                 symtab_insert(name, attrs);
             }
             else{
-                bail_with_error("Variable '%s' is already declared in this scope", name);
+                int kind = symtab_lookup(name)->attrs->kind; //gets the type of what the name was declared as originally
+
+                //checks if the previously declared name was a constant or a variable
+                if(kind == 0){ //constant
+                    bail_with_prog_error(*identLi->file_loc, "variable \"%s\" is already declared as a constant", name);
+                }
+                else{ //variable 
+                    bail_with_prog_error(*identLi->file_loc, "variable \"%s\" is already declared as a variable", name);
+                }
             }
 
             identLi=identLi->next;
