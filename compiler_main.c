@@ -36,7 +36,6 @@ int main(int argc, char *argv[])
     unparseProgram(stdout, progast);
 
     // comment out the next two commands to disable declaration checking
-
     // building symbol table
     symtab_initialize();
 

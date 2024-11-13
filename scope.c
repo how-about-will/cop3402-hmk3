@@ -16,6 +16,7 @@ scope_t* scope_create(){
     for(int i = 0; i < MAX_SCOPE_SIZE; i++){
         new_s->entries[i] = NULL;
     }
+    return new_s;
 }
 
 //returns number of variable and constant declarations that are in this scope
@@ -37,6 +38,7 @@ bool scope_full(scope_t *s){
 static void scope_add(scope_t *s, scope_assoc_t *assoc){
     assoc->attrs->offset_count = (s->loc_count)++;
     s->entries[(s->size)++] = assoc;
+    return;
 }
 
 //crates a new association and adds it the scope
