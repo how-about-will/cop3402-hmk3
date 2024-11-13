@@ -156,9 +156,13 @@ void scope_check_AssignStmt(assign_stmt_t stmt){
         case if_stmt:
         
         scope_check_condition(stmt.data.if_stmt.condition);
-        //scope_check_stmts(*stmt.data.if_stmt.then_stmts);
-        //scope_check_stmts(*stmt.data.if_stmt.else_stmts);
         
+        if(stmt.data.if_stmt.then_stmts != NULL){
+            scope_check_stmts(*stmt.data.if_stmt.then_stmts);
+        }
+        if(stmt.data.if_stmt.else_stmts != NULL && stmt.data.if_stmt.then_stmts != NULL){
+            scope_check_stmts(*stmt.data.if_stmt.else_stmts);
+        }
         break;
         case while_stmt:
         scope_check_condition(stmt.data.while_stmt.condition);
